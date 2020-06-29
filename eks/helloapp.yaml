@@ -1,0 +1,51 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: "helloapp-deployment"
+  namespace: "default"
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: "helloapp"
+    spec:
+      containers:
+      - image: 351174895685.dkr.ecr.us-east-1.amazonaws.com/helloapp:latest
+        imagePullPolicy: Always
+        name: "helloapp"
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "helloapp-service"
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+  type: NodePort
+  selector:
+    app: "helloapp"
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "helloapp-ingress"
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+  labels:
+    app: helloapp
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "helloapp-service"
+              servicePort: 80
+              
