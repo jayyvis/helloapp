@@ -7,7 +7,7 @@ db_hostname=process.env.DB_HOSTNAME
 db_username=process.env.DB_USERNAME
 db_password=process.env.DB_PASSWORD
 
-console.log(`connect to database. hostname: ${DB_HOSTNAME} username: ${DB_USERNAME}`)
+console.log(`connect to database. hostname: ${db_hostname} username: ${db_username}`)
 
 app.get('/', function (req, res) {
     
