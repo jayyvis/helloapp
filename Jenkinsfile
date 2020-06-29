@@ -55,9 +55,12 @@ pipeline {
         }
         stage('Deploy to EKS') {
             steps {
-                echo '=== Restart the deployment to pick latest image ==='
-                sh("kubectl rollout restart deployment/helloapp")
-                sh("kubectl rollout status deployment/helloapp")
+                echo '=== Update the deployment using the latest image ==='
+                sh("sed -i 's/helloapp:latest/helloapp:$SHORT_COMMIT/g' eks/helloapp.yaml")
+                sh("kubectl apply -f eks/helloapp.yaml")
+                // echo '=== Restart the deployment to pick latest image ==='
+                // sh("kubectl rollout restart deployment/helloapp")
+                // sh("kubectl rollout status deployment/helloapp")
             }
         }
     }
