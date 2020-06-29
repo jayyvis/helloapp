@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: helloapp-db
+type: Opaque
+stringData:
+  username: helloapp
+  password: "*******"
+  hostname: dbserver
+
