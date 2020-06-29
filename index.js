@@ -15,7 +15,7 @@ app.get('/', function (req, res) {
     <title>Hello App</title>
     <body style="background-color:coral">
     <p>Hello App!</p>
-    <p>Version: 2.0</p>
+    <p>Version: 1.0</p>
     </body>
     </html>
     `
