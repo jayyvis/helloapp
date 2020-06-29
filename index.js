@@ -1,6 +1,12 @@
 //express
 var express = require('express')
+var morgan = require('morgan')
+
 var app = express()
+
+//express middleware setup
+app.use(morgan('tiny'))
+
 
 //get DB profile for the environment
 db_hostname=process.env.DB_HOSTNAME
@@ -10,7 +16,7 @@ db_password=process.env.DB_PASSWORD
 console.log(`connect to database. hostname: ${db_hostname} username: ${db_username}`)
 
 app.get('/', function (req, res) {
-    
+    console.log('')
     response = `
     <html>
     <title>Hello App</title>
