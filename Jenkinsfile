@@ -10,12 +10,6 @@ pipeline {
                 sh 'echo build completed'
             }
         }
-        stage('Test Application') {
-            steps {
-                echo '=== Testing Application ==='
-                sh 'npm test'
-            }
-        }
         stage('Build Docker Image') {
             when {
                 branch 'master'
@@ -23,8 +17,18 @@ pipeline {
             steps {
                 echo '=== Building Docker Image ==='
                 script {
-                    app = docker.build("helloapp")
+                    image = docker.build("helloapp")
                 }
+            }
+        }
+        stage('Test Application') {
+            steps {
+                echo '=== Testing Application ==='
+                script {
+                    image.inside(sh 'npm test')
+                }
+                //sh 'npm test'
+                //TODO: test the application using the docker image built and push it repo upon successful test
             }
         }
         stage('Push Docker Image') {
@@ -37,8 +41,8 @@ pipeline {
                     GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
                     SHORT_COMMIT = "${GIT_COMMIT_HASH[0..7]}"
                     docker.withRegistry('https://351174895685.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:awsECRCredentials') {
-                        app.push("$SHORT_COMMIT")
-                        app.push("latest")
+                        image.push("$SHORT_COMMIT")
+                        image.push("latest")
                     }
                 }
             }
@@ -46,7 +50,7 @@ pipeline {
         stage('Remove local images') {
             steps {
                 echo '=== Delete the local docker images ==='
-                sh("docker rmi -f myreg:latest || :")
+                sh("docker rmi -f helloapp:latest || :")
             }
         }
     }
