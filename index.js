@@ -2,11 +2,12 @@
 var express = require('express')
 var app = express()
 
-//TODO: fetch it from kube secrets
-db_hostname='dh'
-db_password='dp'
+//get DB profile for the environment
+db_hostname=process.env.DB_HOSTNAME
+db_username=process.env.DB_USERNAME
+db_password=process.env.DB_PASSWORD
 
-console.log(`connect to database. host: ${db_hostname} password: ${db_password}`)
+console.log(`connect to database. hostname: ${DB_HOSTNAME} username: ${DB_USERNAME}`)
 
 app.get('/', function (req, res) {
     

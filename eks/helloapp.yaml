@@ -18,6 +18,23 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
+        env:
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: helloapp-db
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: helloapp-db
+              key: password
+        - name: DB_HOSTNAME
+          valueFrom:
+            secretKeyRef:
+              name: helloapp-db
+              key: hostname
+
 ---
 apiVersion: v1
 kind: Service
