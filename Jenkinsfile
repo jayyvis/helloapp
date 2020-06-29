@@ -53,5 +53,12 @@ pipeline {
                 sh("docker rmi -f helloapp:latest || :")
             }
         }
+        stage('Deploy to EKS') {
+            steps {
+                echo '=== Restart the deployment to pick latest image ==='
+                sh("kubectl rollout restart deployment/helloapp")
+                sh("kubectl rollout status deployment/helloapp")
+            }
+        }
     }
 }

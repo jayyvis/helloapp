@@ -11,3 +11,4 @@ http://localhost:8080/
 #kubectl set image deployment/helloapp helloapp=helloapp:latest
 
 kubectl rollout restart deployment/helloapp
+kubectl rollout status deployment/helloapp
