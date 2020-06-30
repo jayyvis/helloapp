@@ -60,7 +60,7 @@ pipeline {
                 sh("kubectl apply -f eks/helloapp.yaml")
                 // echo '=== Restart the deployment to pick latest image ==='
                 // sh("kubectl rollout restart deployment/helloapp")
-                // sh("kubectl rollout status deployment/helloapp")
+                sh("kubectl rollout status deployment/helloapp")
             }
         }
     }
