@@ -1,0 +1,5 @@
+    - rolearn: arn:aws:iam::351174895685:role/jenkins-eks-role
+      username: jenkins-eks-role
+      groups:
+      - system:masters
+
