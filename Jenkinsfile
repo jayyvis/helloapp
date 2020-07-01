@@ -10,13 +10,6 @@ pipeline {
                 sh 'echo build completed'
             }
         }
-        stage('Test Application') {
-            agent { dockerfile true }
-            steps {
-                echo '=== Testing Application ==='
-                sh 'npm test'
-            }
-        }
         stage('Build Docker Image') {
             when {
                 branch 'master'
@@ -26,6 +19,13 @@ pipeline {
                 script {
                     image = docker.build("helloapp")
                 }
+            }
+        }
+        stage('Test Application') {
+            agent { docker 'helloapp:latest' }
+            steps {
+                echo '=== Testing Application ==='
+                sh 'npm test'
             }
         }
         stage('Push Docker Image') {
