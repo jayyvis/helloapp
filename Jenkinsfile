@@ -22,14 +22,10 @@ pipeline {
             }
         }
         stage('Test Application') {
-            // agent { docker 'helloapp:latest' }
+            agent { docker 'helloapp:latest' }
             steps {
                 echo '=== Testing Application ==='
-                script {
-                    image.inside {
-                        sh 'npm test'
-                    }
-                }
+                sh 'npm test'
             }
         }
         stage('Push Docker Image') {
