@@ -10,6 +10,17 @@ pipeline {
                 sh 'echo build completed'
             }
         }
+        stage('Test Application') {
+            agent { dockerfile true }
+            steps {
+                echo '=== Testing Application ==='
+                // script {
+                //     image.inside(sh 'npm test')
+                // }
+                sh 'npm test'
+                //TODO: test the application using the docker image built and push it repo upon successful test
+            }
+        }
         stage('Build Docker Image') {
             when {
                 branch 'master'
@@ -19,19 +30,6 @@ pipeline {
                 script {
                     image = docker.build("helloapp")
                 }
-            }
-        }
-        stage('Test Application') {
-            agent {
-                docker { image 'node:14.4.0-alpine' }
-            }
-            steps {
-                echo '=== Testing Application ==='
-                // script {
-                //     image.inside(sh 'npm test')
-                // }
-                sh 'npm test'
-                //TODO: test the application using the docker image built and push it repo upon successful test
             }
         }
         stage('Push Docker Image') {
