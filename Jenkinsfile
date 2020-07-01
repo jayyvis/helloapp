@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Test Application') {
             agent {
-                docker { image 'helloapp:latest' }
+                docker { image 'node:14.4.0-alpine' }
             }
             steps {
                 echo '=== Testing Application ==='
