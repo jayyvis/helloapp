@@ -22,12 +22,15 @@ pipeline {
             }
         }
         stage('Test Application') {
+            agent {
+                docker { image 'helloapp:latest' }
+            }
             steps {
                 echo '=== Testing Application ==='
                 // script {
                 //     image.inside(sh 'npm test')
                 // }
-                //sh 'npm test'
+                sh 'npm test'
                 //TODO: test the application using the docker image built and push it repo upon successful test
             }
         }
