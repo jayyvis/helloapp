@@ -17,6 +17,12 @@ pipeline {
             }
         }
         stage('Build Docker Image') {
+            when {
+                anyOf {
+                branch 'feature/*'
+                branch 'release'
+                }
+            }
             steps {
                 echo '=== Building Docker Image ==='
                 script {
@@ -25,13 +31,25 @@ pipeline {
             }
         }
         stage('Test Application') {
+            when {
+                anyOf {
+                branch 'feature/*'
+                branch 'release'
+                }
+            }
             agent { docker 'helloapp:latest' }
             steps {
                 echo '=== Testing Application ==='
                 sh 'npm test'
             }
         }
-        stage('Push Docker Image') {
+        stage('Publish Docker Image') {
+            when {
+                anyOf {
+                branch 'feature/*'
+                branch 'release'
+                }
+            }
             steps {
                 echo '=== Pushing Docker Image ==='
                 script {
@@ -42,14 +60,11 @@ pipeline {
                         image.push("latest")
                     }
                 }
-            }
-        }
-        stage('Remove local images') {
-            steps {
-                echo '=== Delete the local docker images ==='
+                echo '=== Delete the local docker image ==='
                 sh("docker rmi -f helloapp:latest || :")
             }
         }
+       
         stage('Deploy to DEV EKS') {
             when {
                 branch 'feature/*'
