@@ -69,6 +69,10 @@ pipeline {
             when {
                 branch 'feature/*'
             }
+            input {
+                message "Deploy to DEV?"
+                id "simple-input"
+            }
             steps {
                 echo '=== Update the deployment using the latest image ==='
                 sh("sed -i 's/helloapp:latest/helloapp:$SHORT_COMMIT/g' eks/helloapp.yaml")
