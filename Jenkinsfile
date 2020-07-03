@@ -1,8 +1,8 @@
 pipeline {
     agent any
-       triggers {
+    triggers {
         pollSCM "* * * * *"
-       }
+    }
     stages {
         stage('Build Application') { 
             steps {
@@ -11,9 +11,6 @@ pipeline {
             }
         }
         stage('Build Docker Image') {
-            when {
-                branch 'master'
-            }
             steps {
                 echo '=== Building Docker Image ==='
                 script {
@@ -29,9 +26,6 @@ pipeline {
             }
         }
         stage('Push Docker Image') {
-            when {
-                branch 'master'
-            }
             steps {
                 echo '=== Pushing Docker Image ==='
                 script {
@@ -50,7 +44,10 @@ pipeline {
                 sh("docker rmi -f helloapp:latest || :")
             }
         }
-        stage('Deploy to EKS') {
+        stage('Deploy to DEV EKS') {
+            when {
+                branch 'feature/*'
+            }
             steps {
                 echo '=== Update the deployment using the latest image ==='
                 sh("sed -i 's/helloapp:latest/helloapp:$SHORT_COMMIT/g' eks/helloapp.yaml")
@@ -58,6 +55,22 @@ pipeline {
                 // echo '=== Restart the deployment to pick latest image ==='
                 // sh("kubectl rollout restart deployment/helloapp")
                 sh("kubectl rollout status deployment/helloapp")
+            }
+        }
+        stage('Deploy to QA EKS') {
+            when {
+                branch 'release'
+            }
+            steps {
+                echo '=== Deploying the app to QA EKS cluster ==='
+            }
+        }
+        stage('Deploy to PROD EKS') {
+            when {
+                branch 'release'
+            }
+            steps {
+                echo '=== Deploying the app to PROD EKS cluster ==='
             }
         }
     }
