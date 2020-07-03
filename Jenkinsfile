@@ -83,7 +83,10 @@ pipeline {
                 branch 'release'
                 beforeInput true
             }
-            input "Deploy to QA?"
+            input {
+                message "Deploy to QA?"
+                id "simple-input"
+            }
             steps {
                 echo '=== Deploying the app to QA EKS cluster ==='
             }
@@ -93,7 +96,10 @@ pipeline {
                 branch 'release'
                 beforeInput true
             }
-            input "Deploy to PROD?"
+            input {
+                message "Deploy to PROD?"
+                id "simple-input"
+            }
             steps {
                 echo '=== Deploying the app to PROD EKS cluster ==='
             }
