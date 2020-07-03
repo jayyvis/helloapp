@@ -5,6 +5,12 @@ pipeline {
     }
     stages {
         stage('Build Application') { 
+            when {
+                anyOf {
+                branch 'feature/*'
+                branch 'release'
+                }
+            }
             steps {
                 echo '=== Building Application ==='
                 sh 'echo build completed'
