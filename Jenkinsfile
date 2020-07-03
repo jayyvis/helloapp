@@ -69,10 +69,6 @@ pipeline {
             when {
                 branch 'feature/*'
             }
-            input {
-                message "Deploy to DEV?"
-                id "simple-input"
-            }
             steps {
                 echo '=== Update the deployment using the latest image ==='
                 sh("sed -i 's/helloapp:latest/helloapp:$SHORT_COMMIT/g' eks/helloapp.yaml")
@@ -89,7 +85,7 @@ pipeline {
             }
             input {
                 message "Deploy to QA?"
-                id "simple-input"
+                id "decision"
             }
             steps {
                 echo '=== Deploying the app to QA EKS cluster ==='
@@ -102,7 +98,7 @@ pipeline {
             }
             input {
                 message "Deploy to PROD?"
-                id "simple-input"
+                id "decision"
             }
             steps {
                 echo '=== Deploying the app to PROD EKS cluster ==='
