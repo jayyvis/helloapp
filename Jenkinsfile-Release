@@ -1,9 +1,9 @@
 node {
     if (env.BRANCH_NAME != 'release') {
-        currentBuild.result = 'SUCCESS'
+    //    currentBuild.result = 'SUCCESS'
         return
     }
-    
+
   checkout scm
   def workspace = pwd()
 
