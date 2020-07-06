@@ -1,9 +1,4 @@
 pipeline {
-    script {
-        if (env.BRANCH_NAME == 'release') {
-            return
-        }
-    }
     agent any
     triggers {
         pollSCM "* * * * *"
@@ -12,7 +7,8 @@ pipeline {
         stage('Build Application') { 
             when {
                 anyOf {
-                branch 'feature/*'
+                    branch 'feature/*'
+                    branch 'hotfix/*'
                 }
             }
             steps {
@@ -23,7 +19,8 @@ pipeline {
         stage('Build Docker Image') {
             when {
                 anyOf {
-                branch 'feature/*'
+                    branch 'feature/*'
+                    branch 'hotfix/*'
                 }
             }
             steps {
@@ -37,9 +34,9 @@ pipeline {
             when {
                 beforeAgent true
                 anyOf {
-                branch 'feature/*'
+                    branch 'feature/*'
+                    branch 'hotfix/*'
                 }
-
             }
             agent { docker 'helloapp:latest' }
             steps {
@@ -50,7 +47,8 @@ pipeline {
         stage('Publish Docker Image') {
             when {
                 anyOf {
-                branch 'feature/*'
+                    branch 'feature/*'
+                    branch 'hotfix/*'
                 }
             }
             steps {
@@ -70,7 +68,10 @@ pipeline {
        
         stage('Deploy to DEV EKS') {
             when {
-                branch 'feature/*'
+                anyOf {
+                    branch 'feature/*'
+                    branch 'hotfix/*'
+                }
             }
             steps {
                 echo '=== Update the deployment using the latest image ==='
