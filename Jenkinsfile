@@ -81,6 +81,11 @@ pipeline {
         stage('Deploy to QA EKS') {
             when {
                 branch 'release'
+                beforeInput true
+            }
+            input {
+                message "Deploy to QA?"
+                id "decision"
             }
             steps {
                 echo '=== Deploying the app to QA EKS cluster ==='
@@ -89,6 +94,11 @@ pipeline {
         stage('Deploy to PROD EKS') {
             when {
                 branch 'release'
+                beforeInput true
+            }
+            input {
+                message "Deploy to PROD?"
+                id "decision"
             }
             steps {
                 echo '=== Deploying the app to PROD EKS cluster ==='
