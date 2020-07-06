@@ -5,12 +5,22 @@ pipeline {
     }
     stages {
         stage('Build Application') { 
+            when {
+                anyOf {
+                branch 'feature/*'
+                }
+            }
             steps {
                 echo '=== Building Application ==='
                 sh 'echo build completed'
             }
         }
         stage('Build Docker Image') {
+            when {
+                anyOf {
+                branch 'feature/*'
+                }
+            }
             steps {
                 echo '=== Building Docker Image ==='
                 script {
@@ -19,6 +29,11 @@ pipeline {
             }
         }
         stage('Test Application') {
+            when {
+                anyOf {
+                branch 'feature/*'
+                }
+            }
             agent { docker 'helloapp:latest' }
             steps {
                 echo '=== Testing Application ==='
@@ -26,6 +41,11 @@ pipeline {
             }
         }
         stage('Publish Docker Image') {
+            when {
+                anyOf {
+                branch 'feature/*'
+                }
+            }
             steps {
                 echo '=== Pushing Docker Image ==='
                 script {
@@ -42,6 +62,9 @@ pipeline {
         }
        
         stage('Deploy to DEV EKS') {
+            when {
+                branch 'feature/*'
+            }
             steps {
                 echo '=== Update the deployment using the latest image ==='
                 sh("sed -i 's/helloapp:latest/helloapp:$SHORT_COMMIT/g' eks/helloapp.yaml")
@@ -49,25 +72,6 @@ pipeline {
                 // echo '=== Restart the deployment to pick latest image ==='
                 // sh("kubectl rollout restart deployment/helloapp")
                 sh("kubectl rollout status deployment/helloapp")
-            }
-        }
-
-        stage('Deploy to QA EKS') {
-            input {
-                message "Deploy to QA?"
-                id "decision"
-            }
-            steps {
-                echo '=== Deploying the app to QA EKS cluster ==='
-            }
-        }
-        stage('Deploy to PROD EKS') {
-            input {
-                message "Deploy to PROD?"
-                id "decision"
-            }
-            steps {
-                echo '=== Deploying the app to PROD EKS cluster ==='
             }
         }
     }
