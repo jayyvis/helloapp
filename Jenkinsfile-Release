@@ -3,6 +3,7 @@ pipeline {
     triggers {
         pollSCM "* * * * *"
     }
+
     stages {
         stage('Build Application') { 
             when {
@@ -27,6 +28,7 @@ pipeline {
         stage('Test Application') {
             when {
                 branch 'release'
+                beforeAgent true
             }
             agent { docker 'helloapp:latest' }
             steps {
