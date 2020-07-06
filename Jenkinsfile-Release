@@ -4,6 +4,11 @@ pipeline {
         pollSCM "* * * * *"
     }
 
+    if (env.BRANCH_NAME != 'release') {
+        currentBuild.result = 'SUCCESS'
+        return
+    }
+
     stages {
         stage('Build Application') { 
             when {
