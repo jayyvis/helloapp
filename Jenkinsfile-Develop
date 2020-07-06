@@ -1,4 +1,9 @@
 pipeline {
+    script {
+        if (env.BRANCH_NAME == 'release') {
+            return
+        }
+    }
     agent any
     triggers {
         pollSCM "* * * * *"
