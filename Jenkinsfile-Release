@@ -40,16 +40,17 @@ pipeline {
                 sh("docker rmi -f helloapp:latest || :")
             }
         }
-       
         stage('Deploy to DEV EKS') {
             steps {
                 echo '=== Update the deployment using the latest image ==='
                 sh("sed -i 's/helloapp:latest/helloapp:$SHORT_COMMIT/g' eks/helloapp.yaml")
+
+                echo '=== Deploying the app to DEV EKS cluster ==='
+                sh("bash eks/eks-cluster-config.sh dev")
                 sh("kubectl apply -f eks/helloapp.yaml")
                 sh("kubectl rollout status deployment/helloapp")
             }
         }
-
         stage('Deploy to QA EKS') {
             input {
                 message "Deploy to QA?"
@@ -57,7 +58,7 @@ pipeline {
             }
             steps {
                 echo '=== Deploying the app to QA EKS cluster ==='
-                sh("eks/eks-cluster-config.sh qa")
+                sh("bash eks/eks-cluster-config.sh qa")
                 sh("kubectl apply -f eks/helloapp.yaml")
                 sh("kubectl rollout status deployment/helloapp")
             }
@@ -69,7 +70,7 @@ pipeline {
             }
             steps {
                 echo '=== Deploying the app to PROD EKS cluster ==='
-                sh("eks/eks-cluster-config.sh prod")
+                sh("bash eks/eks-cluster-config.sh prod")
                 sh("kubectl apply -f eks/helloapp.yaml")
                 sh("kubectl rollout status deployment/helloapp")
             }

@@ -65,7 +65,6 @@ pipeline {
                 sh("docker rmi -f helloapp:latest || :")
             }
         }
-       
         stage('Deploy to DEV EKS') {
             when {
                 anyOf {
@@ -75,8 +74,10 @@ pipeline {
             }
             steps {
                 echo '=== Update the deployment using the latest image ==='
-                sh("eks/eks-cluster-config.sh dev")
                 sh("sed -i 's/helloapp:latest/helloapp:$SHORT_COMMIT/g' eks/helloapp.yaml")
+
+                echo '=== Deploying the app to DEV EKS cluster ==='
+                sh("bash eks/eks-cluster-config.sh dev")
                 sh("kubectl apply -f eks/helloapp.yaml")
                 // echo '=== Restart the deployment to pick latest image ==='
                 // sh("kubectl rollout restart deployment/helloapp")
