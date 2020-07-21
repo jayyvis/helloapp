@@ -46,8 +46,6 @@ pipeline {
                 echo '=== Update the deployment using the latest image ==='
                 sh("sed -i 's/helloapp:latest/helloapp:$SHORT_COMMIT/g' eks/helloapp.yaml")
                 sh("kubectl apply -f eks/helloapp.yaml")
-                // echo '=== Restart the deployment to pick latest image ==='
-                // sh("kubectl rollout restart deployment/helloapp")
                 sh("kubectl rollout status deployment/helloapp")
             }
         }
@@ -59,6 +57,9 @@ pipeline {
             }
             steps {
                 echo '=== Deploying the app to QA EKS cluster ==='
+                sh("eks/eks-cluster-config.sh qa")
+                sh("kubectl apply -f eks/helloapp.yaml")
+                sh("kubectl rollout status deployment/helloapp")
             }
         }
         stage('Deploy to PROD EKS') {
@@ -68,6 +69,9 @@ pipeline {
             }
             steps {
                 echo '=== Deploying the app to PROD EKS cluster ==='
+                sh("eks/eks-cluster-config.sh prod")
+                sh("kubectl apply -f eks/helloapp.yaml")
+                sh("kubectl rollout status deployment/helloapp")
             }
         }
     }
