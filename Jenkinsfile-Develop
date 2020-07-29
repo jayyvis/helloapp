@@ -79,8 +79,6 @@ pipeline {
                 echo '=== Deploying the app to DEV EKS cluster ==='
                 sh("bash eks/eks-cluster-config.sh dev")
                 sh("kubectl apply -f eks/helloapp.yaml")
-                // echo '=== Restart the deployment to pick latest image ==='
-                // sh("kubectl rollout restart deployment/helloapp")
                 sh("kubectl rollout status deployment/helloapp")
             }
         }

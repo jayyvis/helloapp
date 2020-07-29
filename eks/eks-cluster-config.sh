@@ -5,4 +5,4 @@ environment=$1
 #
 echo aws eks --region us-east-1 update-kubeconfig --name helloapp-$environment
 
-aws eks --region us-east-1 update-kubeconfig --name petclinic
+aws eks --region us-east-1 update-kubeconfig --name eks01
